@@ -4,6 +4,7 @@ import { StatusBar } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useNavigation } from '@react-navigation/native';
 
+import { Load } from '../../components/Load';
 import { Car } from '../../components/Car';
 import Logo from '../../assets/logo.svg';
 import api from '../../services/api';
@@ -16,7 +17,6 @@ import {
   TotalCars,
   CarList
 } from './styles';
-import { Load } from '../../components/Load';
 
 export function Home() {
   const [cars, setCars] = useState<CarDTO[]>([]);
@@ -38,8 +38,8 @@ export function Home() {
     fetchCars();
   }, []);
 
-  function handleCarDetails() {
-    navigation.navigate('CarDetails');
+  function handleCarDetails(car: CarDTO) {
+    navigation.navigate('CarDetails', { car });
   }
 
   return (
@@ -70,7 +70,7 @@ export function Home() {
           <CarList
             data={cars}
             keyExtractor={item => item.id}
-            renderItem={({ item }) => <Car data={item} onPress={handleCarDetails} />}
+            renderItem={({ item }) => <Car data={item} onPress={() => handleCarDetails(item)} />}
           />
       }
     </Container>
