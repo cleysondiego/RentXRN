@@ -9,6 +9,7 @@ import api from '../../services/api';
 import { BackButton } from '../../components/BackButton';
 import { CarDTO } from '../../dtos/CarDTO';
 import { Car } from '../../components/Car';
+import { LoadAnimation } from '../../components/LoadAnimation';
 
 import {
   Container,
@@ -25,7 +26,6 @@ import {
   CarFooterPeriod,
   CarFooterDate,
 } from './styles';
-import { Load } from '../../components/Load';
 
 interface CarProps {
   id: string;
@@ -88,7 +88,7 @@ export function MyCars() {
       { 
         loading
         ?
-          <Load /> 
+          <LoadAnimation />
         : 
           <Content>
             <Appointments>

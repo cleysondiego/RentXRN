@@ -13,7 +13,7 @@ import Animated, {
   withSpring
 } from 'react-native-reanimated';
 
-import { Load } from '../../components/Load';
+import { LoadAnimation } from '../../components/LoadAnimation';
 import { Car } from '../../components/Car';
 import Logo from '../../assets/logo.svg';
 import api from '../../services/api';
@@ -118,7 +118,7 @@ export function Home() {
       { 
         loading 
         ?
-          <Load /> 
+          <LoadAnimation />
         : 
           <CarList
             data={cars}
