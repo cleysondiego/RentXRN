@@ -2,11 +2,10 @@ import { TextInput } from 'react-native';
 
 import styled from 'styled-components/native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { BorderlessButton } from 'react-native-gesture-handler';
 
 export const Container = styled.View`
   flex-direction: row;
-
-  margin-bottom: 8px;
 `;
 
 export const IconContainer = styled.View`
