@@ -43,13 +43,19 @@ export function SignUpSecondStep() {
   }
 
   function handleRegister() {
-    if (!password || passwordConfirm) {
+    if (!password || !passwordConfirm) {
       return Alert.alert('Informe a senha e a confirmação');
     }
 
     if (password != passwordConfirm) {
       return Alert.alert('As senhas não são iguais');
     }
+
+    navigation.navigate('Confirmation', {
+      title: 'Conta Criada!',
+      message: `Agora é só fazer login\ne aproveitar.`,
+      nextScreenRoute: 'SignIn'
+    });
   }
 
   return (
