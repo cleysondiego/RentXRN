@@ -23,6 +23,7 @@ import {
   Form,
   Footer
 } from './styles';
+import { useAuth } from '../../hooks/auth';
 
 export function SignIn() {
   const [email, setEmail] = useState('');
@@ -30,6 +31,7 @@ export function SignIn() {
 
   const theme = useTheme();
   const navigation = useNavigation();
+  const { signIn } = useAuth();
 
   async function handleSignIn() {
     try {
@@ -39,6 +41,8 @@ export function SignIn() {
       });
   
       await schema.validate({ email, password });
+
+      signIn({ email, password });
     } catch(error) {
       if (error instanceof Yup.ValidationError) {
         Alert.alert('Validação falhou', error.message);
