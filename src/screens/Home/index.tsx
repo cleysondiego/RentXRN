@@ -25,18 +25,27 @@ export function Home() {
   const navigation = useNavigation();
 
   useEffect(() => {
+    let isMounted = true;
+
     async function fetchCars() {
       try {
         const response = await api.get<CarDTO[]>('/cars');
-        setCars(response.data);
+        if (isMounted) {
+          setCars(response.data);
+        }
       } catch (error) {
         console.log(error);
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     }
 
     fetchCars();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   function handleCarDetails(car: CarDTO) {
