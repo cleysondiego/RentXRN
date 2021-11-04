@@ -14,6 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 import { PasswordInput } from '../../components/PasswordInput';
+import { useAuth } from '../../hooks/auth';
 
 import {
   Container,
@@ -23,7 +24,6 @@ import {
   Form,
   Footer
 } from './styles';
-import { useAuth } from '../../hooks/auth';
 
 export function SignIn() {
   const [email, setEmail] = useState('');
