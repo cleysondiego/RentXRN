@@ -3,6 +3,7 @@ import { StatusBar } from 'react-native';
 
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useNavigation } from '@react-navigation/native';
+import { useNetInfo } from '@react-native-community/netinfo';
 
 import { LoadAnimation } from '../../components/LoadAnimation';
 import { Car } from '../../components/Car';
@@ -22,6 +23,7 @@ export function Home() {
   const [cars, setCars] = useState<CarDTO[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const netInfo = useNetInfo();
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -47,6 +49,12 @@ export function Home() {
       isMounted = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (netInfo.isConnected) {
+
+    }
+  }, [netInfo.isConnected]);
 
   function handleCarDetails(car: CarDTO) {
     navigation.navigate('CarDetails', { car });
