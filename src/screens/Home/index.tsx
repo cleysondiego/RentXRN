@@ -4,12 +4,15 @@ import { StatusBar } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useNavigation } from '@react-navigation/native';
 import { useNetInfo } from '@react-native-community/netinfo';
+import { synchronize } from '@nozbe/watermelondb/sync';
 
-import { LoadAnimation } from '../../components/LoadAnimation';
-import { Car } from '../../components/Car';
 import Logo from '../../assets/logo.svg';
 import api from '../../services/api';
+import { LoadAnimation } from '../../components/LoadAnimation';
+import { Car } from '../../components/Car';
 import { CarDTO } from '../../dtos/CarDTO';
+import { database } from '../../database';
+import { Car as ModelCar } from '../../database/model/Car';
 
 import {
   Container,
@@ -20,7 +23,7 @@ import {
 } from './styles';
 
 export function Home() {
-  const [cars, setCars] = useState<CarDTO[]>([]);
+  const [cars, setCars] = useState<ModelCar[]>([]);
   const [loading, setLoading] = useState(true);
 
   const netInfo = useNetInfo();
@@ -31,9 +34,11 @@ export function Home() {
 
     async function fetchCars() {
       try {
-        const response = await api.get<CarDTO[]>('/cars');
+        const carCollection = database.get<ModelCar>('cars');
+        const cars = await carCollection.query().fetch();
+
         if (isMounted) {
-          setCars(response.data);
+          setCars(cars);
         }
       } catch (error) {
         console.log(error);
@@ -51,13 +56,29 @@ export function Home() {
   }, []);
 
   useEffect(() => {
-    if (netInfo.isConnected) {
-
+    if (netInfo.isConnected === true) {
+      offlineSynchronize();
     }
   }, [netInfo.isConnected]);
 
   function handleCarDetails(car: CarDTO) {
     navigation.navigate('CarDetails', { car });
+  }
+
+  async function offlineSynchronize() {
+    await synchronize({
+      database,
+      pullChanges: async ({ lastPulledAt }) => {
+        const response = await api.get(`cars/sync/pull?lastPulledVersion=${lastPulledAt || 0}`);
+
+        const { changes, latestVersion } = response.data as any;
+        return { changes, timestamp: latestVersion };
+      },
+      pushChanges: async ({ changes }) => {
+        const user = changes.users;
+        await api.post('/user/sync', user);
+      },
+    });
   }
 
   return (
